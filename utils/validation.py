@@ -139,9 +139,6 @@ UNSUPPORTED_JUDGEMENT_PATTERNS: tuple[str, ...] = (
     r"\breasonable\b",
     r"\bwell-established\b",
     r"\buser-friendly\b",
-    r"\bcompetitive\b",
-    r"\bfeasible\b",
-    r"\bscalable\b",
     r"\bstrong value proposition\b",
 )
 
@@ -164,9 +161,9 @@ INVENTED_TACTIC_PATTERNS: tuple[str, ...] = (
 def _list_count(section_text: str, numbered: bool = False) -> int:
     """Count top-level Markdown list items in one already-split section."""
     if numbered:
-        pattern = r"(?m)^\s*\d+[.)]\s+"
+        pattern = r"(?m)^\d+[.)]\s+"
     else:
-        pattern = r"(?m)^\s*[-*]\s+"
+        pattern = r"(?m)^[-*]\s+"
     return len(re.findall(pattern, section_text))
 
 
