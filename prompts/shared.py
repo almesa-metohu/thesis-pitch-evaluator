@@ -271,6 +271,8 @@ Your ONLY task is to repair those failures while preserving the report's substan
 
 Rules:
 - Apply the exact same reviewer-facing template required below.
+- The output MUST use these exact bullet labels verbatim: "Business Model & Value", "Competitive Position", "Growth Logic", "Strategic Dependencies", "Technical Setup", "Scalability", "Dependencies & Reliability", "Implementation Evidence", "Derived Metrics", "Revenue & Pricing", "Costs & Margins", "Funding & Sustainability", "Target Segment", "Acquisition & Go-to-Market", "Competition & Positioning", "Retention Evidence".
+- Do not shorten, rename or paraphrase any of those labels.
 - Preserve all grounded evidence, material calculations, risks, missing information and recommendations.
 - Do not add new findings, external facts, benchmarks, tactics or assumptions.
 - Remove unsupported evaluative adjectives instead of replacing them with another adjective.
