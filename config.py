@@ -50,6 +50,9 @@ MAX_OUTPUT_TOKENS: int = 1700
 # the same neutral length-correction step. The correction may only compress or
 # expand the existing draft; it may not add new analysis.
 MAX_FINAL_LENGTH_RETRIES: int = 2
+# Neutral final-report repair uses a lower cap than the analytical calls so
+# corrected reports reliably stay below the 1,000-word thesis limit.
+FINAL_QC_MAX_OUTPUT_TOKENS: int = 1250
 
 # Intermediate specialist outputs may be shorter. They are inputs to the
 # moderator and are NOT compared against the single-agent report.
@@ -138,6 +141,7 @@ def generation_settings() -> dict[str, object]:
         "target_output_words": TARGET_OUTPUT_WORDS,
         "output_tolerance": OUTPUT_TOLERANCE,
         "max_final_length_retries": MAX_FINAL_LENGTH_RETRIES,
+        "final_qc_max_output_tokens": FINAL_QC_MAX_OUTPUT_TOKENS,
         "specialist_target_words": SPECIALIST_TARGET_WORDS,
         "parallel_specialists": PARALLEL_SPECIALISTS,
         "moderator_opening_max_output_tokens": MODERATOR_OPENING_MAX_OUTPUT_TOKENS,
