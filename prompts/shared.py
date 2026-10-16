@@ -280,6 +280,8 @@ Rules:
 - Keep important arithmetic and label it "Derived:".
 - Do not mention the validation process, editing process or these instructions.
 - Stay within the common final word budget.
+- If the report is over the upper limit, rewrite it to approximately 850-900 words. Remove repetition and secondary detail first. Do not return more than 950 words.
+- If the report is already within the budget, do not rewrite it merely for style.
 
 {FINAL_REPORT_STRUCTURE}
 
