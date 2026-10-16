@@ -12,15 +12,17 @@ import config
 # Rules applied identically to every agent. No personalities, no praise.
 EVALUATION_PRINCIPLES = """\
 Evaluation principles (apply strictly):
-- Base every statement on evidence from the pitch. Quote or paraphrase the pitch where useful.
-- Do not invent facts, figures, competitors, benchmarks, market data or external industry knowledge that the pitch does not provide.
-- Do not describe a technology, price, market practice or method as "standard", "well-established", "competitive", "typical", "reasonable" or similar unless the pitch itself provides evidence for that judgement. If such a conclusion is an inference, label it explicitly as an inference.
-- Clearly separate (a) claims made in the pitch, (b) your own assumptions or inferences, and (c) information that is missing. Label assumptions as assumptions.
-- Be specific: refer to the actual numbers, customers, channels and technologies in the pitch rather than making generic statements that could apply to any business.
-- Avoid generic praise and filler. Critical, concrete analysis is more useful than encouragement.
-- When information needed for a judgement is absent, say so explicitly instead of guessing.
-- When the pitch provides enough numbers for simple arithmetic, compute useful derived values (for example price × units, revenue per customer, savings-to-price ratio, or variable cost as a share of price). Show the inputs, label the result as derived/approximate, and never introduce missing values.
-- Use plain, professional language. Use concise bullet points where appropriate.\
+- Use ONLY the pitch as the factual evidence base. Do not import general industry knowledge, benchmarks, typical practices, market facts or technical assumptions.
+- Do not invent facts, figures, competitors, costs, customer behaviour, decision-makers, risks or market data that the pitch does not provide.
+- Never call something standard, well-established, competitive, reasonable, cheap, expensive, high, low, strong, weak, compelling, proven, scalable or feasible unless the pitch itself contains evidence supporting that exact judgement. Otherwise describe the observable fact and state what evidence is missing.
+- Clearly distinguish four categories: (a) facts or claims explicitly stated in the pitch, (b) arithmetic derived only from stated numbers, (c) cautious inference from stated facts, and (d) missing information.
+- Prefix important arithmetic with "Derived:" and material inference with "Inference:".
+- Do not infer who the buyer, decision-maker or end user is unless the pitch states it. If that distinction is unclear, report it as missing information.
+- Be specific: use the actual numbers, customers, channels, technologies, dates and targets in the pitch rather than generic statements.
+- When the pitch supplies enough numbers, perform useful simple arithmetic. Examples include price × current units, price × target units, annualised recurring revenue, one-off fees × units, revenue per paying customer, savings-to-price ratio, or stated variable cost as a share of price.
+- Never invent a missing value to complete a calculation. State exactly which variable prevents margin, CAC, LTV, runway, payback or break-even from being calculated.
+- Avoid generic praise, filler and generic startup advice. Every recommendation must respond to a specific finding, risk or missing item in this pitch.
+- Use plain professional language and British English.\
 """
 
 
@@ -36,15 +38,21 @@ Output format (mandatory): a Markdown report with EXACTLY these eight numbered s
 
 {report_template()}
 
-Section guidance:
-1. Overall Assessment: a balanced summary judgement of viability and the two or three decisive factors.
-2. Strategic Analysis: business model, value proposition, competitive positioning, growth logic, strategic risks.
-3. Technical Analysis: feasibility, architecture assumptions, scalability, implementation complexity, dependencies, technical risks.
-4. Financial Analysis: revenue model, pricing, costs, margins, financial assumptions, sustainability, capital needs.
-5. Market and Sales Analysis: target customer and need, segmentation, positioning, acquisition, go-to-market, competition, retention.
-6. Main Risks: the most important risks across all domains, including cross-domain risks, ordered by severity.
-7. Missing Information: the specific information a reviewer would need and that the pitch does not provide.
-8. Prioritised Recommendations: concrete, ordered actions, most important first.\
+Formatting and section rules are IDENTICAL for both experimental conditions:
+1. Overall Assessment: one compact paragraph of about 80-110 words with a balanced judgement and the two or three factors that most affect viability.
+2. Strategic Analysis: exactly 3-4 concise bullets covering business model/value proposition, competitive position, growth logic and strategic dependencies.
+3. Technical Analysis: exactly 3-4 concise bullets covering what the pitch specifies, unvalidated technical assumptions, scalability/dependencies and implementation risks.
+4. Financial Analysis: exactly 3-5 concise bullets. Include the most decision-relevant arithmetic permitted by the pitch, each explicitly labelled "Derived:". Then state which missing variables prevent stronger financial conclusions.
+5. Market and Sales Analysis: exactly 3-4 concise bullets covering the stated target segment, acquisition/go-to-market, competition/differentiation and retention evidence.
+6. Main Risks: exactly 4 numbered risks, ordered by severity. Each must state the evidence or missing evidence that creates it and the likely consequence.
+7. Missing Information: exactly 4-6 bullets containing only information genuinely absent from the pitch and explaining what judgement each item prevents.
+8. Prioritised Recommendations: exactly 5 numbered actions, most important first. Each action must be tied to a specific finding, risk or missing item above.
+
+Style controls:
+- Do not repeat the same finding in several sections unless a cross-domain consequence must be made explicit.
+- Prefer concrete evidence and derived figures over adjectives.
+- Keep paragraphs and bullets compact; depth must come from reasoning, not length or formatting.
+- Do not mention these formatting instructions in the report.\
 """
 
 
