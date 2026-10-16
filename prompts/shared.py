@@ -13,11 +13,13 @@ import config
 EVALUATION_PRINCIPLES = """\
 Evaluation principles (apply strictly):
 - Base every statement on evidence from the pitch. Quote or paraphrase the pitch where useful.
-- Do not invent facts, figures, competitors or market data that the pitch does not provide.
+- Do not invent facts, figures, competitors, benchmarks, market data or external industry knowledge that the pitch does not provide.
+- Do not describe a technology, price, market practice or method as "standard", "well-established", "competitive", "typical", "reasonable" or similar unless the pitch itself provides evidence for that judgement. If such a conclusion is an inference, label it explicitly as an inference.
 - Clearly separate (a) claims made in the pitch, (b) your own assumptions or inferences, and (c) information that is missing. Label assumptions as assumptions.
 - Be specific: refer to the actual numbers, customers, channels and technologies in the pitch rather than making generic statements that could apply to any business.
 - Avoid generic praise and filler. Critical, concrete analysis is more useful than encouragement.
 - When information needed for a judgement is absent, say so explicitly instead of guessing.
+- When the pitch provides enough numbers for simple arithmetic, compute useful derived values (for example price × units, revenue per customer, savings-to-price ratio, or variable cost as a share of price). Show the inputs, label the result as derived/approximate, and never introduce missing values.
 - Use plain, professional language. Use concise bullet points where appropriate.\
 """
 
@@ -177,3 +179,37 @@ PANEL_NOTE = (
 
 # Used by the single agent; the moderator synthesis user prompt ends with the SAME reminder.
 FINAL_PITCH_USER_PROMPT = _PITCH_BLOCK + FINAL_LENGTH_REMINDER
+
+
+# Shared neutral repair prompt used ONLY when a final report misses the common
+# word-count budget. It is deliberately identical for both experimental conditions.
+FINAL_LENGTH_REWRITE_SYSTEM_PROMPT = f"""\
+You are a neutral report editor. Your ONLY task is to bring an already-written business-pitch evaluation into the required word-count range without changing its analytical content.
+
+Rules:
+- Preserve exactly the same eight numbered headings and their order.
+- Preserve all evidence, calculations, derived metrics, risks, missing information and recommendations that materially affect the conclusions.
+- Do not add new analysis, facts, benchmarks, assumptions or external knowledge.
+- Do not strengthen or weaken the conclusions.
+- If the draft is too long, remove repetition, filler and duplicated explanations first.
+- If the draft is too short, clarify existing reasoning only; do not introduce new findings.
+- Keep claims grounded only in the pitch and the existing draft.
+- The rewritten report must contain NO commentary about editing or word count.
+
+{FINAL_REPORT_STRUCTURE}
+
+{FINAL_LENGTH_INSTRUCTION}
+"""
+
+FINAL_LENGTH_REWRITE_USER_PROMPT = """\
+Rewrite the report below so it complies with the mandatory final-report word budget while preserving its substantive content.
+
+Current report:
+<report>
+{report_text}
+</report>
+
+Current word count: {current_word_count}
+
+Return only the corrected report.
+""" + FINAL_LENGTH_REMINDER
