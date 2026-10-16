@@ -5,9 +5,35 @@ from __future__ import annotations
 from typing import Any
 
 import config
-from agents.base import AgentResult
+from agents.base import AgentResult, run_agent
+from prompts.shared import FINAL_LENGTH_REWRITE_SYSTEM_PROMPT, FINAL_LENGTH_REWRITE_USER_PROMPT
 from utils.storage import new_run_id, utc_timestamp
 from utils.validation import find_missing_sections, find_role_mentions, within_length_budget
+
+
+def enforce_final_length(final: AgentResult) -> tuple[AgentResult, list[AgentResult]]:
+    """Apply the same neutral length-correction step to either final-report condition.
+
+    The editor may only compress or expand the existing draft. It receives no
+    pitch text and therefore cannot introduce condition-specific new analysis.
+    """
+    current = final
+    corrections: list[AgentResult] = []
+    for _ in range(config.MAX_FINAL_LENGTH_RETRIES):
+        if within_length_budget(current.word_count):
+            break
+        current = run_agent(
+            "length_editor",
+            FINAL_LENGTH_REWRITE_SYSTEM_PROMPT,
+            FINAL_LENGTH_REWRITE_USER_PROMPT,
+            config.MAX_OUTPUT_TOKENS,
+            {
+                "report_text": current.output,
+                "current_word_count": str(current.word_count),
+            },
+        )
+        corrections.append(current)
+    return current, corrections
 
 
 def build_run_record(
@@ -26,6 +52,7 @@ def build_run_record(
     llm_calls: int,
     discussion: list[dict[str, Any]] | None = None,
     followup_questions: list[dict[str, Any]] | None = None,
+    final_length_correction_calls: int = 0,
 ) -> dict[str, Any]:
     """Assemble the structured metadata saved for every generated report.
 
@@ -62,6 +89,7 @@ def build_run_record(
         "role_mentions": find_role_mentions(final.output),
         "finish_reason": final.finish_reason,
         "llm_calls": llm_calls,
+        "final_length_correction_calls": final_length_correction_calls,
         "report": final.output,
     }
     if discussion is not None:
