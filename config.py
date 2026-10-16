@@ -49,7 +49,7 @@ MAX_OUTPUT_TOKENS: int = 1700
 # If a final report falls outside the shared word budget, both conditions use
 # the same neutral length-correction step. The correction may only compress or
 # expand the existing draft; it may not add new analysis.
-MAX_FINAL_LENGTH_RETRIES: int = 2
+MAX_FINAL_LENGTH_RETRIES: int = 3
 
 # Intermediate specialist outputs may be shorter. They are inputs to the
 # moderator and are NOT compared against the single-agent report.
