@@ -21,7 +21,9 @@ Evaluation principles (apply strictly):
 - Be specific: use the actual numbers, customers, channels, technologies, dates and targets in the pitch rather than generic statements.
 - When the pitch supplies enough numbers, perform useful simple arithmetic. Examples include price × current units, price × target units, annualised recurring revenue, one-off fees × units, revenue per paying customer, savings-to-price ratio, or stated variable cost as a share of price.
 - Never invent a missing value to complete a calculation. State exactly which variable prevents margin, CAC, LTV, runway, payback or break-even from being calculated.
-- Avoid generic praise, filler and generic startup advice. Every recommendation must respond to a specific finding, risk or missing item in this pitch.
+- Avoid generic praise, filler and generic startup advice.
+- Recommendations must stay inside the evidence boundary of the pitch. They may request validation, measurement, clarification, testing, costing or evidence collection for a specific identified gap, but must NOT invent new product features, loyalty programmes, consultants, backup teams, new channels, new technologies, financing schemes or other tactics that the pitch did not mention.
+- If a useful action would require choosing a tactic that is not in the pitch, recommend the decision or evidence needed, not the tactic itself.
 - Use plain professional language and British English.\
 """
 
@@ -201,7 +203,8 @@ Rules:
 - Do not strengthen or weaken the conclusions.
 - If the draft is too long, target about {config.TARGET_OUTPUT_WORDS} words by removing repetition, filler, duplicated explanations and non-decisive wording first.
 - If the draft is too short, target about {config.TARGET_OUTPUT_WORDS} words by clarifying existing reasoning only; do not introduce new findings.
-- Preserve the required bullet/numbered-list structure for sections 2-8.
+- Conform the report exactly to the shared visible template, including the exact bold labels in sections 2-5, four numbered risks, five missing-information bullets and five numbered recommendations.
+- Remove any internal headings such as "Key Findings", "Assessment", "Evidence", "Risks" or "Recommendations".
 - Preserve every material "Derived:" calculation already present and do not create a new calculation that was absent from the draft.
 - Keep claims grounded only in the pitch and the existing draft.
 - The rewritten report must contain NO commentary about editing or word count.
