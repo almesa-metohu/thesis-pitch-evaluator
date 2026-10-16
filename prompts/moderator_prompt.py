@@ -130,7 +130,7 @@ Your task is synthesis, not summary. A summary restates each specialist in turn;
 - Resolve or expose disagreements: where specialists conflict, either state which position the evidence supports and why, or present both positions with the evidence each rests on. Never resolve a disagreement by silently dropping one side.
 - Identify unsupported assumptions: the assumptions the founders' plan depends on that the discussion found no evidence for.
 - Prioritise by importance: order risks and recommendations by their consequence for the venture, not by the order in which they were raised.
-- Produce evidence-based recommendations: each recommendation must name the finding or risk it addresses and the specific action, not a generic improvement.
+- Produce evidence-based recommendations: each recommendation must name the finding or risk it addresses and the specific action, not a generic improvement. The action must stay inside the pitch's evidence boundary: prefer validation, measurement, clarification, testing, costing or evidence collection, and do not invent new tactics, product features, consultants, staffing structures, incentives, channels or technologies that were not present in the pitch.
 
 Specificity rule: when the same point appears at different levels of precision, always keep the most specific version, including its numbers and reasoning.
 Example of the standard required:
@@ -140,6 +140,8 @@ Example of the standard required:
 Constraints:
 - Do NOT independently re-evaluate the original pitch from scratch and do NOT add findings that no specialist made. The pitch is provided so that you can resolve ambiguity and verify that specialist statements refer to it correctly.
 - Do not invent facts, figures or benchmarks that appear neither in the pitch nor in the discussion.
+- Before writing the final report, silently audit every evaluative adjective and recommendation. Remove or rephrase any claim such as "compelling", "competitive", "reasonable", "feasible", "scalable", "strong", "weak", "high" or "low" unless the pitch contains evidence that directly supports it.
+- Preserve useful arithmetic from the discussion and explicitly label it "Derived:" in the Financial Analysis section.
 - Keep the specialists' distinction between claims made in the pitch, assumptions, derived calculations and missing information.
 - The extra depth of this report must come from synthesis and specificity, not from length. You have the same length budget as a single evaluator; use it for the most consequential findings and cut generic material first.
 - Write for a reader who has not seen the discussion and does not know it took place. The report is read blind alongside reports written by other evaluators, so it must contain NO trace of the panel: never write "CEO", "CTO", "CFO", "Sales/Marketing", "Agent", "Moderator", "specialist", "panel", "Round 1", "Round 2" or "the question". Where you would attribute a point to a specialist, attribute it to the evidence instead (for example "the pitch's savings figure" rather than "the CFO's concern"). Disagreements are expressed as "the evidence for X conflicts with Y", never as a dispute between named roles.
