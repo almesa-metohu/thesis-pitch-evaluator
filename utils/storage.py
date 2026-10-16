@@ -105,6 +105,8 @@ CSV_COLUMNS: tuple[str, ...] = (
     "missing_sections",
     "llm_calls",
     "final_length_correction_calls",
+    "final_qc_passed",
+    "final_qc_issues",
     "json_path",
 )
 
@@ -126,6 +128,7 @@ def save_run(record: dict[str, Any], subdir: str = "runs") -> Path:
     row = {col: record.get(col, "") for col in CSV_COLUMNS}
     row["json_path"] = str(json_path.relative_to(config.PROJECT_ROOT))
     row["missing_sections"] = "|".join(record.get("missing_sections", []))
+    row["final_qc_issues"] = "|".join(record.get("final_qc_issues", []))
     append_csv_row(config.RUNS_CSV, row, CSV_COLUMNS)
     return json_path
 
