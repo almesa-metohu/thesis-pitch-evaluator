@@ -1,0 +1,23 @@
+[
+  {
+    "pitch_id": "P01",
+    "title": "FleetSense - predictive maintenance for small delivery fleets",
+    "pitch_text": "FleetSense is a subscription service that helps small and medium-sized delivery companies (10 to 200 vans) reduce vehicle downtime. We install a plug-in OBD-II device in each van that streams engine diagnostics, mileage and driving behaviour to our cloud platform. A machine-learning model predicts component failures (brakes, batteries, alternators) one to three weeks in advance and automatically books a slot with a partner garage. Fleet managers see a dashboard with vehicle health scores and estimated cost savings. We charge 25 EUR per vehicle per month plus a one-off 60 EUR hardware fee. In a 6-month pilot with two courier firms (48 vans in total) we reduced unplanned downtime by 31 percent and the firms reported saving roughly 180 EUR per van per month. Our team consists of two founders: one former fleet operations manager and one data scientist. We have an outsourced firmware developer. We are raising 600k EUR to hire two engineers and a sales lead, and to expand to 2,000 vehicles in Germany and the Netherlands within 18 months. Competitors such as Samsara and Geotab focus on large enterprise fleets and charge significantly more; we believe the small-fleet segment is underserved. Our go-to-market relies on partnerships with independent garages, who refer customers in exchange for guaranteed service bookings.",
+    "variant_of": null,
+    "notes": "Example placeholder pitch. Replace with the real evaluation dataset."
+  },
+  {
+    "pitch_id": "P02",
+    "title": "StudyLoop - AI tutoring marketplace for secondary school students",
+    "pitch_text": "StudyLoop is a mobile app that connects secondary school students with on-demand tutoring in maths and science. Students photograph a homework problem; an AI assistant first provides step-by-step guidance, and if the student is still stuck they can escalate to a live human tutor within five minutes. Tutors are university students who we vet and pay per session. Parents buy credit bundles: 15 EUR for 5 AI-plus-human escalations, or a 29 EUR monthly family plan with unlimited AI help and 10 escalations. We launched a beta in one city three months ago and have 1,200 registered students, 310 paying families and 60 active tutors. Monthly revenue is 7,400 EUR and growing about 20 percent month over month. The AI layer is built on a third-party large language model API, which currently costs us about 0.40 EUR per paying family per month. Our team is three co-founders: a former maths teacher, a software engineer and a growth marketer. We plan to expand to five more cities over the next year and are seeking 400k EUR in pre-seed funding. Our main competitors are traditional tutoring agencies and free AI chatbots; we differentiate through the fast human escalation and a curriculum-aligned knowledge base built by teachers.",
+    "variant_of": null,
+    "notes": "Example placeholder pitch. Replace with the real evaluation dataset."
+  },
+  {
+    "pitch_id": "P02-V1",
+    "title": "StudyLoop (sensitivity variant: weaker traction numbers)",
+    "pitch_text": "StudyLoop is a mobile app that connects secondary school students with on-demand tutoring in maths and science. Students photograph a homework problem; an AI assistant first provides step-by-step guidance, and if the student is still stuck they can escalate to a live human tutor within five minutes. Tutors are university students who we vet and pay per session. Parents buy credit bundles: 15 EUR for 5 AI-plus-human escalations, or a 29 EUR monthly family plan with unlimited AI help and 10 escalations. We launched a beta in one city three months ago and have 400 registered students, 45 paying families and 12 active tutors. Monthly revenue is 1,100 EUR and growing about 8 percent month over month. The AI layer is built on a third-party large language model API, which currently costs us about 0.40 EUR per paying family per month. Our team is three co-founders: a former maths teacher, a software engineer and a growth marketer. We plan to expand to five more cities over the next year and are seeking 400k EUR in pre-seed funding. Our main competitors are traditional tutoring agencies and free AI chatbots; we differentiate through the fast human escalation and a curriculum-aligned knowledge base built by teachers.",
+    "variant_of": "P02",
+    "notes": "Sensitivity-study variant of P02: identical text except traction figures. Used ONLY by the sensitivity sub-study, not by the main comparison."
+  }
+]

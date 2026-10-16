@@ -1,0 +1,13 @@
+# Core
+streamlit>=1.38
+langchain-core>=0.3
+langchain-openai>=0.2
+openai>=1.50
+python-dotenv>=1.0
+tiktoken>=0.7
+
+# Analysis
+pandas>=2.2
+scipy>=1.13
+numpy>=1.26
+matplotlib>=3.9

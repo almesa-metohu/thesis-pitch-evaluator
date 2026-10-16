@@ -1,0 +1,179 @@
+"""Prompt fragments shared by every agent so that both conditions are controlled.
+
+The single-agent prompt and the moderator prompt use the SAME evaluation
+principles, the SAME report template and the SAME length instruction. The
+specialist prompts use the same principles with a shorter length budget.
+"""
+
+from __future__ import annotations
+
+import config
+
+# Rules applied identically to every agent. No personalities, no praise.
+EVALUATION_PRINCIPLES = """\
+Evaluation principles (apply strictly):
+- Base every statement on evidence from the pitch. Quote or paraphrase the pitch where useful.
+- Do not invent facts, figures, competitors or market data that the pitch does not provide.
+- Clearly separate (a) claims made in the pitch, (b) your own assumptions or inferences, and (c) information that is missing. Label assumptions as assumptions.
+- Be specific: refer to the actual numbers, customers, channels and technologies in the pitch rather than making generic statements that could apply to any business.
+- Avoid generic praise and filler. Critical, concrete analysis is more useful than encouragement.
+- When information needed for a judgement is absent, say so explicitly instead of guessing.
+- Use plain, professional language. Use concise bullet points where appropriate.\
+"""
+
+
+def report_template() -> str:
+    """Numbered Markdown headings for the shared final report structure."""
+    return "\n".join(
+        f"## {i}. {name}" for i, name in enumerate(config.REPORT_SECTIONS, start=1)
+    )
+
+
+FINAL_REPORT_STRUCTURE = f"""\
+Output format (mandatory): a Markdown report with EXACTLY these eight numbered second-level headings, in this order, and no other top-level sections:
+
+{report_template()}
+
+Section guidance:
+1. Overall Assessment: a balanced summary judgement of viability and the two or three decisive factors.
+2. Strategic Analysis: business model, value proposition, competitive positioning, growth logic, strategic risks.
+3. Technical Analysis: feasibility, architecture assumptions, scalability, implementation complexity, dependencies, technical risks.
+4. Financial Analysis: revenue model, pricing, costs, margins, financial assumptions, sustainability, capital needs.
+5. Market and Sales Analysis: target customer and need, segmentation, positioning, acquisition, go-to-market, competition, retention.
+6. Main Risks: the most important risks across all domains, including cross-domain risks, ordered by severity.
+7. Missing Information: the specific information a reviewer would need and that the pitch does not provide.
+8. Prioritised Recommendations: concrete, ordered actions, most important first.\
+"""
+
+
+def length_instruction(target_words: int, tolerance: int) -> str:
+    """Explicit length budget instruction (identical wording for both systems)."""
+    low, high = target_words - tolerance, target_words + tolerance
+    return (
+        f"Length budget (mandatory): the complete output must be approximately {target_words} words, "
+        f"and must stay between {low} and {high} words in total. Distribute words across sections "
+        f"according to how much the pitch gives you to analyse. Do not exceed the upper bound."
+    )
+
+
+FINAL_LENGTH_INSTRUCTION = length_instruction(config.TARGET_OUTPUT_WORDS, config.OUTPUT_TOLERANCE)
+
+SPECIALIST_LENGTH_INSTRUCTION = (
+    f"Length budget (mandatory): approximately {config.SPECIALIST_TARGET_WORDS} words in total, "
+    f"and no more than {config.SPECIALIST_TARGET_WORDS + 100} words."
+)
+
+def length_reminder(target_words: int, tolerance: int) -> str:
+    """Short numeric reminder placed at the END of the user turn (identical for both systems)."""
+    return (
+        f"Reminder: the complete output must be between {target_words - tolerance} and "
+        f"{target_words + tolerance} words (target about {target_words})."
+    )
+
+
+FINAL_LENGTH_REMINDER = length_reminder(config.TARGET_OUTPUT_WORDS, config.OUTPUT_TOLERANCE)
+SPECIALIST_LENGTH_REMINDER = (
+    f"Reminder: the complete output must be about {config.SPECIALIST_TARGET_WORDS} words and "
+    f"no more than {config.SPECIALIST_TARGET_WORDS + 100} words."
+)
+
+
+def specialist_output_format(domain_label: str) -> str:
+    """Analytical-notes format shared by the four specialists.
+
+    Specialists write notes for the Moderator, not a polished report, so they
+    do NOT use the eight-section final template. Every finding must carry its
+    evidence and its implication so the Moderator can synthesise rather than
+    paraphrase.
+    """
+    return f"""\
+Output format (mandatory): analytical notes for the Moderator, not a polished report for the reader. Use exactly these Markdown headings, in this order:
+
+## {domain_label} Assessment
+## Evidence from Pitch
+## Key Findings
+## Critical Assumptions
+## Risks
+## Missing Information
+## Domain-Specific Recommendations
+
+Section rules:
+- {domain_label} Assessment: two to four sentences giving your domain verdict and the decisive factors behind it.
+- Evidence from Pitch: bullets listing every fact, figure, claim or quote in the pitch that is relevant to your domain. Copy numbers exactly as stated. Do not interpret here.
+- Key Findings: three to six bullets. Each bullet MUST contain three labelled parts on separate lines: "Finding:" (the point), "Evidence:" (the pitch facts it rests on, or "none stated" when the finding rests on an absence), "Implication:" (why it matters and what it changes for the venture).
+- Critical Assumptions: the assumptions, stated or implied, that the founders' plan depends on in your domain. For each, say what evidence would confirm or refute it.
+- Risks: most severe first. For each, give the mechanism by which it causes harm, not only its label.
+- Missing Information: specific items a reviewer would need, and for each what judgement it prevents.
+- Domain-Specific Recommendations: concrete actions, each tied to a finding or risk above; most important first.\
+"""
+
+_PITCH_BLOCK = """\
+Business pitch to evaluate:
+
+<pitch>
+{pitch_text}
+</pitch>
+
+Produce your evaluation now, following the required output format and length budget exactly.
+"""
+
+# Round 1: each specialist receives the pitch and the Moderator's opening.
+SPECIALIST_ROUND1_USER_PROMPT = """\
+Moderator's opening to the panel:
+
+<moderator_opening>
+{moderator_opening}
+</moderator_opening>
+
+Business pitch to evaluate:
+
+<pitch>
+{pitch_text}
+</pitch>
+
+Provide your Round 1 domain analysis now, following the required output format and length budget exactly. Address the issues the Moderator raised that fall in your domain, but do not limit yourself to them.
+""" + SPECIALIST_LENGTH_REMINDER
+
+RESPONSE_LENGTH_REMINDER = (
+    f"Reminder: your response must be about {config.RESPONSE_TARGET_WORDS} words and "
+    f"no more than {config.RESPONSE_TARGET_WORDS + 100} words."
+)
+
+# Round 2: only specialists addressed by the Moderator respond.
+SPECIALIST_ROUND2_USER_PROMPT = """\
+Business pitch (reference):
+
+<pitch>
+{pitch_text}
+</pitch>
+
+Round 1 analyses from all four specialists (your own is marked with your role):
+
+<round1>
+{round1_notes}
+</round1>
+
+The Moderator has addressed the following follow-up question(s) to you:
+
+<moderator_questions>
+{moderator_questions}
+</moderator_questions>
+
+Answer the Moderator now. Rules for this response:
+- Answer each question directly, under a heading "### Response to Question N" (use the question numbers given).
+- Do not repeat your Round 1 analysis; build on it. Reference specific findings or figures from other specialists' Round 1 notes where they bear on the question, naming the specialist (for example "the CTO Agent's point that ...").
+- Where the combination of findings changes a conclusion, say what changes and why. Where it does not, say so and explain what evidence would be needed.
+- Keep every statement anchored to the pitch or to a specialist finding; do not introduce new facts.
+- Finish each response with one line starting "Bottom line:" stating the net implication for the venture.
+""" + RESPONSE_LENGTH_REMINDER
+
+# Sentence appended to every specialist system prompt.
+PANEL_NOTE = (
+    "You are one member of a moderated expert panel. The Moderator opens the discussion, each specialist "
+    "gives a Round 1 analysis, the Moderator then asks targeted cross-domain follow-up questions, and the "
+    "specialists addressed answer in Round 2 before the Moderator writes the synthesis. In Round 2 you may "
+    "and should use findings made by other specialists; in Round 1 you work only from the pitch."
+)
+
+# Used by the single agent; the moderator synthesis user prompt ends with the SAME reminder.
+FINAL_PITCH_USER_PROMPT = _PITCH_BLOCK + FINAL_LENGTH_REMINDER
