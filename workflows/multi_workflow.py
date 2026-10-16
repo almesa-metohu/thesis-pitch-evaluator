@@ -34,7 +34,7 @@ from agents import (
 )
 from agents.specialist import format_questions
 from utils.validation import validate_pitch_text
-from workflows.common import build_run_record, enforce_final_length
+from workflows.common import build_run_record, enforce_final_report_quality
 
 
 def _run_concurrently(jobs: dict[str, Callable[[], AgentResult]]) -> dict[str, AgentResult]:
@@ -123,7 +123,7 @@ def run_multi_workflow(
     ) or "(no specialist was addressed)"
     initial_final = run_moderator_synthesis(text, round1, format_questions(questions), round2_text)
     results.append(initial_final)
-    final, corrections = enforce_final_length(initial_final)
+    final, corrections, qc_issues = enforce_final_report_quality(initial_final)
     results.extend(corrections)
     discussion.append(_message(
         3,
@@ -150,4 +150,5 @@ def run_multi_workflow(
         discussion=discussion,
         followup_questions=questions,
         final_length_correction_calls=len(corrections),
+        final_qc_issues=qc_issues,
     )
