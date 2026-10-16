@@ -259,7 +259,7 @@ Current report:
 
 Current word count: {current_word_count}
 
-Return only the corrected report.
+Return only the corrected report. If the current report is too long, target about 850 words rather than the upper boundary.
 """ + FINAL_LENGTH_REMINDER
 
 
@@ -280,7 +280,7 @@ Rules:
 - Keep important arithmetic and label it "Derived:".
 - Do not mention the validation process, editing process or these instructions.
 - Stay within the common final word budget.
-- If the report is over the upper limit, rewrite it to approximately 850-900 words. Remove repetition and secondary detail first. Do not return more than 950 words.
+- If the report is over the upper limit, rewrite it to approximately 825-875 words. Remove repetition and secondary detail first. Do not return more than 900 words.
 - If the report is already within the budget, do not rewrite it merely for style.
 
 {FINAL_REPORT_STRUCTURE}
