@@ -104,6 +104,7 @@ CSV_COLUMNS: tuple[str, ...] = (
     "within_length_budget",
     "missing_sections",
     "llm_calls",
+    "final_length_correction_calls",
     "json_path",
 )
 
