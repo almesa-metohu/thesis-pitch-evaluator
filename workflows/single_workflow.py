@@ -6,7 +6,7 @@ from typing import Any
 
 from agents import run_single_agent
 from utils.validation import validate_pitch_text
-from workflows.common import build_run_record, enforce_final_length
+from workflows.common import build_run_record, enforce_final_report_quality
 
 
 def run_single_workflow(
@@ -19,7 +19,7 @@ def run_single_workflow(
     """Evaluate ``pitch_text`` with the single-agent baseline and return the run record."""
     text = validate_pitch_text(pitch_text)
     initial = run_single_agent(text)
-    result, corrections = enforce_final_length(initial)
+    result, corrections, qc_issues = enforce_final_report_quality(initial)
     all_results = [initial, *corrections]
     return build_run_record(
         pitch_id=pitch_id,
@@ -35,4 +35,5 @@ def run_single_workflow(
         estimated_cost_usd=sum(r.estimated_cost_usd for r in all_results),
         llm_calls=len(all_results),
         final_length_correction_calls=len(corrections),
+        final_qc_issues=qc_issues,
     )
