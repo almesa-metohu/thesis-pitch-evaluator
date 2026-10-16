@@ -6,34 +6,50 @@ from typing import Any
 
 import config
 from agents.base import AgentResult, run_agent
-from prompts.shared import FINAL_LENGTH_REWRITE_SYSTEM_PROMPT, FINAL_LENGTH_REWRITE_USER_PROMPT
+from prompts.shared import (
+    FINAL_LENGTH_REWRITE_SYSTEM_PROMPT,
+    FINAL_LENGTH_REWRITE_USER_PROMPT,
+    FINAL_QC_REWRITE_SYSTEM_PROMPT,
+    FINAL_QC_REWRITE_USER_PROMPT,
+)
 from utils.storage import new_run_id, utc_timestamp
-from utils.validation import find_missing_sections, find_role_mentions, within_length_budget
+from utils.validation import (
+    final_report_issues,
+    find_missing_sections,
+    find_role_mentions,
+    within_length_budget,
+)
 
 
-def enforce_final_length(final: AgentResult) -> tuple[AgentResult, list[AgentResult]]:
-    """Apply the same neutral length-correction step to either final-report condition.
+def enforce_final_report_quality(final: AgentResult) -> tuple[AgentResult, list[AgentResult], list[str]]:
+    """Apply identical reviewer-facing QC to either experimental condition.
 
-    The editor may only compress or expand the existing draft. It receives no
-    pitch text and therefore cannot introduce condition-specific new analysis.
+    A deterministic validator checks length, exact visible structure, blinding,
+    unsupported judgement terms and invented tactics. If any issue is found,
+    the SAME neutral editor repairs the existing report. No pitch text is
+    supplied to the editor, so the repair cannot add condition-specific analysis.
     """
     current = final
     corrections: list[AgentResult] = []
+    issues = final_report_issues(current.output, current.word_count)
+
     for _ in range(config.MAX_FINAL_LENGTH_RETRIES):
-        if within_length_budget(current.word_count):
+        if not issues:
             break
         current = run_agent(
-            "length_editor",
-            FINAL_LENGTH_REWRITE_SYSTEM_PROMPT,
-            FINAL_LENGTH_REWRITE_USER_PROMPT,
+            "final_qc_editor",
+            FINAL_QC_REWRITE_SYSTEM_PROMPT,
+            FINAL_QC_REWRITE_USER_PROMPT,
             config.MAX_OUTPUT_TOKENS,
             {
                 "report_text": current.output,
-                "current_word_count": str(current.word_count),
+                "issues": "\n".join(f"- {issue}" for issue in issues),
             },
         )
         corrections.append(current)
-    return current, corrections
+        issues = final_report_issues(current.output, current.word_count)
+
+    return current, corrections, issues
 
 
 def build_run_record(
@@ -53,6 +69,7 @@ def build_run_record(
     discussion: list[dict[str, Any]] | None = None,
     followup_questions: list[dict[str, Any]] | None = None,
     final_length_correction_calls: int = 0,
+    final_qc_issues: list[str] | None = None,
 ) -> dict[str, Any]:
     """Assemble the structured metadata saved for every generated report.
 
@@ -90,6 +107,8 @@ def build_run_record(
         "finish_reason": final.finish_reason,
         "llm_calls": llm_calls,
         "final_length_correction_calls": final_length_correction_calls,
+        "final_qc_issues": final_qc_issues or [],
+        "final_qc_passed": not bool(final_qc_issues),
         "report": final.output,
     }
     if discussion is not None:
