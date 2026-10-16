@@ -199,8 +199,8 @@ Rules:
 - Preserve all evidence, calculations, derived metrics, risks, missing information and recommendations that materially affect the conclusions.
 - Do not add new analysis, facts, benchmarks, assumptions or external knowledge.
 - Do not strengthen or weaken the conclusions.
-- If the draft is too long, target about ${config.TARGET_OUTPUT_WORDS} words by removing repetition, filler, duplicated explanations and non-decisive wording first.
-- If the draft is too short, target about ${config.TARGET_OUTPUT_WORDS} words by clarifying existing reasoning only; do not introduce new findings.
+- If the draft is too long, target about {config.TARGET_OUTPUT_WORDS} words by removing repetition, filler, duplicated explanations and non-decisive wording first.
+- If the draft is too short, target about {config.TARGET_OUTPUT_WORDS} words by clarifying existing reasoning only; do not introduce new findings.
 - Preserve the required bullet/numbered-list structure for sections 2-8.
 - Preserve every material "Derived:" calculation already present and do not create a new calculation that was absent from the draft.
 - Keep claims grounded only in the pitch and the existing draft.
