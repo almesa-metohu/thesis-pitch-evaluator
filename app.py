@@ -127,8 +127,12 @@ def _show_report(title: str, record: dict) -> None:
         flags.append("missing sections: " + ", ".join(record["missing_sections"]))
     if record.get("role_mentions"):
         flags.append("blinding risk, report mentions: " + ", ".join(record["role_mentions"]))
+    if record.get("final_qc_issues"):
+        flags.append("final QC: " + " | ".join(record["final_qc_issues"]))
     if flags:
         st.warning("; ".join(flags))
+    elif record.get("final_qc_passed"):
+        st.caption("Final QC passed")
     st.markdown(record["report"])
 
 
