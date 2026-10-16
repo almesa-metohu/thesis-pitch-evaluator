@@ -22,17 +22,26 @@ st.set_page_config(
 
 st.markdown("""
 <style>
-.block-container {max-width: 1450px; padding-top: 2rem; padding-bottom: 4rem;}
+html, body, [class*="css"] {font-size: 14px;}
+.block-container {max-width: 1480px; padding-top: 1.5rem; padding-bottom: 3rem;}
 [data-testid="stSidebar"] {border-right: 1px solid rgba(120,120,120,.16);}
-.hero {padding: .25rem 0 1.4rem 0;}
-.eyebrow {font-size: .76rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; opacity: .55;}
-.hero h1 {margin: .15rem 0 0 0; font-size: clamp(2rem,4vw,3.5rem); line-height: 1.05; letter-spacing: -.045em;}
-.hero p {max-width: 760px; font-size: 1.02rem; opacity: .7; margin-top: .7rem;}
-.badge {display:inline-block; border:1px solid rgba(120,120,120,.22); border-radius:999px; padding:.3rem .65rem; font-size:.78rem; opacity:.68;}
-.section-label {font-size:.76rem; letter-spacing:.1em; text-transform:uppercase; font-weight:700; opacity:.52; margin:.4rem 0 .8rem 0;}
-div[data-testid="stMetric"] {border:1px solid rgba(120,120,120,.16); border-radius:12px; padding:.65rem .75rem;}
-div[data-testid="stChatMessage"] {border:1px solid rgba(120,120,120,.14); border-radius:14px; margin-bottom:.6rem;}
-.stTabs [data-baseweb="tab"] {border-radius:999px; padding-left:1rem; padding-right:1rem;}
+[data-testid="stSidebar"] * {font-size: .88rem;}
+.hero {padding: .15rem 0 1.15rem 0;}
+.eyebrow {font-size: .68rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; opacity: .55;}
+.hero h1 {margin: .12rem 0 0 0; font-size: clamp(1.9rem,3vw,2.8rem); line-height: 1.05; letter-spacing: -.04em;}
+.hero p {max-width: 760px; font-size: .94rem; opacity: .7; margin-top: .6rem;}
+.badge {display:inline-block; border:1px solid rgba(120,120,120,.22); border-radius:999px; padding:.25rem .55rem; font-size:.7rem; opacity:.68;}
+.section-label {font-size:.68rem; letter-spacing:.1em; text-transform:uppercase; font-weight:700; opacity:.52; margin:.25rem 0 .65rem 0;}
+h1 {font-size: 2rem !important;}
+h2 {font-size: 1.45rem !important;}
+h3 {font-size: 1.1rem !important;}
+p, li {font-size: .88rem; line-height: 1.55;}
+div[data-testid="stMetric"] {border:1px solid rgba(120,120,120,.16); border-radius:10px; padding:.5rem .6rem;}
+div[data-testid="stMetricValue"] {font-size: 1.35rem;}
+div[data-testid="stMetricLabel"] {font-size: .72rem;}
+div[data-testid="stChatMessage"] {border:1px solid rgba(120,120,120,.14); border-radius:12px; margin-bottom:.5rem;}
+.stTabs [data-baseweb="tab"] {border-radius:999px; padding-left:.8rem; padding-right:.8rem; font-size:.78rem;}
+[data-testid="stTextArea"] textarea {font-size:.86rem;}
 </style>
 """, unsafe_allow_html=True)
 
@@ -40,7 +49,7 @@ with st.sidebar:
     st.markdown("### Experiment")
     st.caption("Controlled MSc research prototype")
     st.markdown("**Model**")
-    st.code(config.MODEL_NAME, language=None)
+    st.caption(config.MODEL_NAME)
     a, b = st.columns(2)
     a.metric("Temperature", config.TEMPERATURE)
     b.metric("Top-p", config.TOP_P)
@@ -101,12 +110,13 @@ def _show_report(title: str, record: dict) -> None:
     """Render one report with its metadata."""
     st.markdown(f"### {title}")
     st.caption("Final reviewer-facing report")
-    cols = st.columns(5)
-    cols[0].metric("Latency (s)", f"{record['latency_seconds']:.2f}")
-    cols[1].metric("Words", record["word_count"])
-    cols[2].metric("Report tokens", record["token_count"])
-    cols[3].metric("Total tokens (all calls)", record["total_tokens"])
-    cols[4].metric("Est. cost (USD)", f"{record['estimated_cost_usd']:.4f}")
+    top = st.columns(3)
+    top[0].metric("Latency", f"{record['latency_seconds']:.2f}s")
+    top[1].metric("Words", record["word_count"])
+    top[2].metric("Final tokens", record["token_count"])
+    bottom = st.columns(2)
+    bottom[0].metric("Workflow tokens", record["total_tokens"])
+    bottom[1].metric("Est. cost", f"$ {record['estimated_cost_usd']:.4f}")
     flags = []
     if not record["within_length_budget"]:
         flags.append(f"outside length budget ({record['word_count']} words)")
@@ -185,14 +195,11 @@ if run_clicked:
     st.markdown('<div class="section-label">02 · Results</div>', unsafe_allow_html=True)
     multi_record = next((r for _, r in records if "discussion" in r), None)
 
-    if multi_record:
-        report_tab, discussion_tab = st.tabs(["Final report(s)", "Multi-Agent discussion"])
-    else:
-        report_tab = st.container()
-        discussion_tab = None
-
-    with report_tab:
-        if len(records) == 2:
+    if len(records) == 2 and multi_record:
+        compare_tab, single_tab, multi_tab, discussion_tab = st.tabs(
+            ["Compare", "Single-Agent", "Multi-Agent", "Panel discussion"]
+        )
+        with compare_tab:
             st.markdown("### Side-by-side comparison")
             st.caption("Same final structure and output-length budget for both conditions.")
             left, right = st.columns(2, gap="large")
@@ -200,9 +207,18 @@ if run_clicked:
                 _show_report(*records[0])
             with right:
                 _show_report(*records[1])
-        elif records:
+        with single_tab:
             _show_report(*records[0])
-
-    if discussion_tab is not None:
+        with multi_tab:
+            _show_report(*records[1])
         with discussion_tab:
             _show_discussion(multi_record)
+    elif records:
+        if multi_record:
+            report_tab, discussion_tab = st.tabs(["Final report", "Panel discussion"])
+            with report_tab:
+                _show_report(*records[0])
+            with discussion_tab:
+                _show_discussion(multi_record)
+        else:
+            _show_report(*records[0])
