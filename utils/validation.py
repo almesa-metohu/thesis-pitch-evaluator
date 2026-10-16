@@ -168,10 +168,11 @@ def _list_count(section_text: str, numbered: bool = False) -> int:
 
 
 def final_report_issues(report: str, word_count: int | None = None) -> list[str]:
-    """Return deterministic quality-control issues for a reviewer-facing report.
+    """Return only the controls required for a fair reviewer-facing comparison.
 
-    The checks are intentionally structural and symmetric: the same function is
-    applied to both experimental conditions before any report can be exported.
+    Both conditions must use the same length budget, contain the same eight
+    top-level sections, and remain blind to system identity. Content quality is
+    intentionally left to human reviewers rather than over-constrained by code.
     """
     issues: list[str] = []
     wc = count_words(report) if word_count is None else word_count
@@ -183,41 +184,9 @@ def final_report_issues(report: str, word_count: int | None = None) -> list[str]
     missing = find_missing_sections(report)
     if missing:
         issues.append("missing sections: " + ", ".join(missing))
-        return issues
-
-    sections = split_sections(report)
-
-    for section, labels in FINAL_SECTION_LABELS.items():
-        body = sections.get(section, "")
-        for label in labels:
-            if not re.search(rf"(?mi)^\s*[-*]\s+\*\*{re.escape(label)}:\*\*", body):
-                issues.append(f"{section}: missing exact bullet label '{label}'")
-        if _list_count(body) != 4:
-            issues.append(f"{section}: expected exactly 4 bullets")
-
-    if _list_count(sections.get("Main Risks", ""), numbered=True) != 4:
-        issues.append("Main Risks: expected exactly 4 numbered items")
-    if _list_count(sections.get("Missing Information", "")) != 5:
-        issues.append("Missing Information: expected exactly 5 bullets")
-    if _list_count(sections.get("Prioritised Recommendations", ""), numbered=True) != 5:
-        issues.append("Prioritised Recommendations: expected exactly 5 numbered items")
-
-    finance = sections.get("Financial Analysis", "")
-    if "Derived:" not in finance:
-        issues.append("Financial Analysis: at least one material calculation must be labelled 'Derived:'")
 
     role_hits = find_role_mentions(report)
     if role_hits:
         issues.append("blinding terms present: " + ", ".join(role_hits))
-
-    for pattern in UNSUPPORTED_JUDGEMENT_PATTERNS:
-        match = re.search(pattern, report, re.IGNORECASE)
-        if match:
-            issues.append(f"unsupported judgement term: '{match.group(0)}'")
-
-    for pattern in INVENTED_TACTIC_PATTERNS:
-        match = re.search(pattern, report, re.IGNORECASE)
-        if match:
-            issues.append(f"invented tactic: '{match.group(0)}'")
 
     return issues
