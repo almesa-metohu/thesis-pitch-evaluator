@@ -105,6 +105,9 @@ run_clicked = st.button(
     disabled=not pitch_text.strip(),
 )
 
+if "last_records" not in st.session_state:
+    st.session_state.last_records = []
+
 
 def _show_report(title: str, record: dict) -> None:
     """Render one report with its metadata."""
@@ -187,38 +190,43 @@ if run_clicked:
                 record = workflow(pitch_text, pitch_id, pitch_title, 1, "streamlit")
                 save_run(record, "streamlit")
                 records.append((title, record))
+        st.session_state.last_records = records
     except ValidationError as exc:
         st.error(str(exc))
     except RuntimeError as exc:
         st.error(str(exc))
-    st.divider()
-    st.markdown('<div class="section-label">02 · Results</div>', unsafe_allow_html=True)
-    multi_record = next((r for _, r in records if "discussion" in r), None)
 
-    if len(records) == 2 and multi_record:
-        compare_tab, single_tab, multi_tab, discussion_tab = st.tabs(
-            ["Compare", "Single-Agent", "Multi-Agent", "Panel discussion"]
-        )
-        with compare_tab:
-            st.markdown("### Side-by-side comparison")
-            st.caption("Same final structure and output-length budget for both conditions.")
-            left, right = st.columns(2, gap="large")
-            with left:
+records = st.session_state.last_records
+if records:
+        st.divider()
+        st.markdown('<div class="section-label">02 · Results</div>', unsafe_allow_html=True)
+        multi_record = next((r for _, r in records if "discussion" in r), None)
+    
+        if len(records) == 2 and multi_record:
+            compare_tab, single_tab, multi_tab, discussion_tab = st.tabs(
+                ["Compare", "Single-Agent", "Multi-Agent", "Panel discussion"]
+            )
+            with compare_tab:
+                st.markdown("### Side-by-side comparison")
+                st.caption("Same final structure and output-length budget for both conditions.")
+                left, right = st.columns(2, gap="large")
+                with left:
+                    _show_report(*records[0])
+                with right:
+                    _show_report(*records[1])
+            with single_tab:
                 _show_report(*records[0])
-            with right:
+            with multi_tab:
                 _show_report(*records[1])
-        with single_tab:
-            _show_report(*records[0])
-        with multi_tab:
-            _show_report(*records[1])
-        with discussion_tab:
-            _show_discussion(multi_record)
-    elif records:
-        if multi_record:
-            report_tab, discussion_tab = st.tabs(["Final report", "Panel discussion"])
-            with report_tab:
-                _show_report(*records[0])
             with discussion_tab:
                 _show_discussion(multi_record)
-        else:
-            _show_report(*records[0])
+        elif records:
+            if multi_record:
+                report_tab, discussion_tab = st.tabs(["Final report", "Panel discussion"])
+                with report_tab:
+                    _show_report(*records[0])
+                with discussion_tab:
+                    _show_discussion(multi_record)
+            else:
+                _show_report(*records[0])
+    
