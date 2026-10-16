@@ -52,9 +52,9 @@ def length_instruction(target_words: int, tolerance: int) -> str:
     """Explicit length budget instruction (identical wording for both systems)."""
     low, high = target_words - tolerance, target_words + tolerance
     return (
-        f"Length budget (mandatory): the complete output must be approximately {target_words} words, "
-        f"and must stay between {low} and {high} words in total. Distribute words across sections "
-        f"according to how much the pitch gives you to analyse. Do not exceed the upper bound."
+        f"Length budget (mandatory): the complete output must stay between {low} and {high} words. "
+        f"Aim for {target_words - 25}-{target_words + 25} words so normal variation remains safely inside the hard range. "
+        f"Use the fixed section format above, remove repetition first, and do not exceed {high} words."
     )
 
 
@@ -191,8 +191,10 @@ Rules:
 - Preserve all evidence, calculations, derived metrics, risks, missing information and recommendations that materially affect the conclusions.
 - Do not add new analysis, facts, benchmarks, assumptions or external knowledge.
 - Do not strengthen or weaken the conclusions.
-- If the draft is too long, remove repetition, filler and duplicated explanations first.
-- If the draft is too short, clarify existing reasoning only; do not introduce new findings.
+- If the draft is too long, target about ${config.TARGET_OUTPUT_WORDS} words by removing repetition, filler, duplicated explanations and non-decisive wording first.
+- If the draft is too short, target about ${config.TARGET_OUTPUT_WORDS} words by clarifying existing reasoning only; do not introduce new findings.
+- Preserve the required bullet/numbered-list structure for sections 2-8.
+- Preserve every material "Derived:" calculation already present and do not create a new calculation that was absent from the draft.
 - Keep claims grounded only in the pitch and the existing draft.
 - The rewritten report must contain NO commentary about editing or word count.
 
