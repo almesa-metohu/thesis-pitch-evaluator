@@ -36,27 +36,61 @@ def report_template() -> str:
 
 
 FINAL_REPORT_STRUCTURE = f"""\
-Output format (mandatory): a Markdown report with EXACTLY these eight numbered second-level headings, in this order, and no other top-level sections:
+Output format (mandatory): a Markdown report with EXACTLY these eight numbered second-level headings, in this order, and no other headings anywhere in the report:
 
 {report_template()}
 
-Formatting and section rules are IDENTICAL for both experimental conditions:
-1. Overall Assessment: one compact paragraph of about 80-110 words with a balanced judgement and the two or three factors that most affect viability.
-2. Strategic Analysis: exactly 3-4 concise bullets covering business model/value proposition, competitive position, growth logic and strategic dependencies.
-3. Technical Analysis: exactly 3-4 concise bullets covering what the pitch specifies, unvalidated technical assumptions, scalability/dependencies and implementation risks.
-4. Financial Analysis: exactly 3-5 concise bullets. Include the most decision-relevant arithmetic permitted by the pitch, each explicitly labelled "Derived:". Then state which missing variables prevent stronger financial conclusions.
-5. Market and Sales Analysis: exactly 3-4 concise bullets covering the stated target segment, acquisition/go-to-market, competition/differentiation and retention evidence.
-6. Main Risks: exactly 4 numbered risks, ordered by severity. Each must state the evidence or missing evidence that creates it and the likely consequence.
-7. Missing Information: exactly 4-6 bullets containing only information genuinely absent from the pitch and explaining what judgement each item prevents.
-8. Prioritised Recommendations: exactly 5 numbered actions, most important first. Each action must be tied to a specific finding, risk or missing item above.
+The visible structure below is IDENTICAL for both experimental conditions. Follow it exactly.
 
-Style controls:
-- Do not repeat the same finding in several sections unless a cross-domain consequence must be made explicit.
+## 1. Overall Assessment
+One compact paragraph of about 80-110 words. No bullets.
+
+## 2. Strategic Analysis
+Exactly four bullets, in this exact order and with these bold labels:
+- **Business Model & Value:** ...
+- **Competitive Position:** ...
+- **Growth Logic:** ...
+- **Strategic Dependencies:** ...
+
+## 3. Technical Analysis
+Exactly four bullets, in this exact order and with these bold labels:
+- **Technical Setup:** ...
+- **Scalability:** ...
+- **Dependencies & Reliability:** ...
+- **Implementation Evidence:** ...
+
+## 4. Financial Analysis
+Exactly four bullets, in this exact order and with these bold labels:
+- **Derived Metrics:** include the most decision-relevant arithmetic permitted by the pitch; prefix every calculation with "Derived:".
+- **Revenue & Pricing:** ...
+- **Costs & Margins:** ...
+- **Funding & Sustainability:** ...
+
+## 5. Market and Sales Analysis
+Exactly four bullets, in this exact order and with these bold labels:
+- **Target Segment:** ...
+- **Acquisition & Go-to-Market:** ...
+- **Competition & Positioning:** ...
+- **Retention Evidence:** ...
+
+## 6. Main Risks
+Exactly four numbered risks. Each item must state the risk, the pitch evidence or missing evidence that creates it, and the likely consequence.
+
+## 7. Missing Information
+Exactly five bullets. Each bullet must name one genuinely absent item and state what judgement it prevents.
+
+## 8. Prioritised Recommendations
+Exactly five numbered actions, most important first. Each action must be tied to a specific finding, risk or missing item above and stay inside the pitch's evidence boundary.
+
+Strict controls:
+- Do NOT create internal headings such as "Key Findings", "Evidence", "Assessment" or "Risks".
+- Do NOT change the bold labels above.
+- Do NOT add a preamble, conclusion or appendix.
+- Do NOT repeat the same finding across sections unless a cross-domain consequence must be made explicit.
 - Prefer concrete evidence and derived figures over adjectives.
-- Keep paragraphs and bullets compact; depth must come from reasoning, not length or formatting.
-- Do not mention these formatting instructions in the report.\
+- Keep bullets compact.
+- Do not mention these instructions in the report.\
 """
-
 
 def length_instruction(target_words: int, tolerance: int) -> str:
     """Explicit length budget instruction (identical wording for both systems)."""
@@ -224,6 +258,44 @@ Current report:
 </report>
 
 Current word count: {current_word_count}
+
+Return only the corrected report.
+""" + FINAL_LENGTH_REMINDER
+
+
+FINAL_QC_REWRITE_SYSTEM_PROMPT = f"""\
+You are a neutral quality-control editor for a controlled research experiment.
+
+You receive an already-written business-pitch evaluation and a deterministic list of validation failures.
+Your ONLY task is to repair those failures while preserving the report's substantive analytical content.
+
+Rules:
+- Apply the exact same reviewer-facing template required below.
+- Preserve all grounded evidence, material calculations, risks, missing information and recommendations.
+- Do not add new findings, external facts, benchmarks, tactics or assumptions.
+- Remove unsupported evaluative adjectives instead of replacing them with another adjective.
+- Replace invented remedies with evidence-bounded actions such as validate, measure, clarify, test, cost, quantify or collect evidence.
+- Keep important arithmetic and label it "Derived:".
+- Do not mention the validation process, editing process or these instructions.
+- Stay within the common final word budget.
+
+{FINAL_REPORT_STRUCTURE}
+
+{FINAL_LENGTH_INSTRUCTION}
+"""
+
+FINAL_QC_REWRITE_USER_PROMPT = """\
+Repair the final report below.
+
+Deterministic validation failures:
+<issues>
+{issues}
+</issues>
+
+Current report:
+<report>
+{report_text}
+</report>
 
 Return only the corrected report.
 """ + FINAL_LENGTH_REMINDER
