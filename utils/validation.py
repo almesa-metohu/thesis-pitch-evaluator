@@ -98,3 +98,129 @@ def split_sections(report: str) -> dict[str, str]:
         body_end = positions[i + 1][0] if i + 1 < len(positions) else len(report)
         result[section] = report[body_start:body_end].strip()
     return result
+
+
+# Final reviewer-facing format controls. These are deliberately mechanical and
+# identical for the single-agent and multi-agent conditions.
+FINAL_SECTION_LABELS: dict[str, tuple[str, ...]] = {
+    "Strategic Analysis": (
+        "Business Model & Value",
+        "Competitive Position",
+        "Growth Logic",
+        "Strategic Dependencies",
+    ),
+    "Technical Analysis": (
+        "Technical Setup",
+        "Scalability",
+        "Dependencies & Reliability",
+        "Implementation Evidence",
+    ),
+    "Financial Analysis": (
+        "Derived Metrics",
+        "Revenue & Pricing",
+        "Costs & Margins",
+        "Funding & Sustainability",
+    ),
+    "Market and Sales Analysis": (
+        "Target Segment",
+        "Acquisition & Go-to-Market",
+        "Competition & Positioning",
+        "Retention Evidence",
+    ),
+}
+
+# Terms that tend to create unsupported qualitative claims. The final report
+# can still present the underlying evidence; it simply must not hide that
+# evidence behind an ungrounded adjective.
+UNSUPPORTED_JUDGEMENT_PATTERNS: tuple[str, ...] = (
+    r"\bcompelling\b",
+    r"\bpromising\b",
+    r"\battractive\b",
+    r"\breasonable\b",
+    r"\bwell-established\b",
+    r"\buser-friendly\b",
+    r"\bcompetitive\b",
+    r"\bfeasible\b",
+    r"\bscalable\b",
+    r"\bstrong value proposition\b",
+)
+
+# Tactics that appeared in exploratory outputs despite not being present in the
+# pitch. Reviewer-facing reports should ask for evidence/validation instead of
+# inventing these remedies.
+INVENTED_TACTIC_PATTERNS: tuple[str, ...] = (
+    r"\bloyalty program(?:me)?s?\b",
+    r"\bexternal consultants?\b",
+    r"\bbackup (?:engineering )?teams?\b",
+    r"\btiered pricing\b",
+    r"\bvehicle manufacturers?\b",
+    r"\bonline platforms?\b",
+    r"\bdirect marketing\b",
+    r"\bfinancing options?\b",
+    r"\bloyalty discounts?\b",
+)
+
+
+def _list_count(section_text: str, numbered: bool = False) -> int:
+    """Count top-level Markdown list items in one already-split section."""
+    if numbered:
+        pattern = r"(?m)^\s*\d+[.)]\s+"
+    else:
+        pattern = r"(?m)^\s*[-*]\s+"
+    return len(re.findall(pattern, section_text))
+
+
+def final_report_issues(report: str, word_count: int | None = None) -> list[str]:
+    """Return deterministic quality-control issues for a reviewer-facing report.
+
+    The checks are intentionally structural and symmetric: the same function is
+    applied to both experimental conditions before any report can be exported.
+    """
+    issues: list[str] = []
+    wc = count_words(report) if word_count is None else word_count
+    if not within_length_budget(wc):
+        low = config.TARGET_OUTPUT_WORDS - config.OUTPUT_TOLERANCE
+        high = config.TARGET_OUTPUT_WORDS + config.OUTPUT_TOLERANCE
+        issues.append(f"word count {wc} is outside {low}-{high}")
+
+    missing = find_missing_sections(report)
+    if missing:
+        issues.append("missing sections: " + ", ".join(missing))
+        return issues
+
+    sections = split_sections(report)
+
+    for section, labels in FINAL_SECTION_LABELS.items():
+        body = sections.get(section, "")
+        for label in labels:
+            if not re.search(rf"(?mi)^\s*[-*]\s+\*\*{re.escape(label)}:\*\*", body):
+                issues.append(f"{section}: missing exact bullet label '{label}'")
+        if _list_count(body) != 4:
+            issues.append(f"{section}: expected exactly 4 bullets")
+
+    if _list_count(sections.get("Main Risks", ""), numbered=True) != 4:
+        issues.append("Main Risks: expected exactly 4 numbered items")
+    if _list_count(sections.get("Missing Information", "")) != 5:
+        issues.append("Missing Information: expected exactly 5 bullets")
+    if _list_count(sections.get("Prioritised Recommendations", ""), numbered=True) != 5:
+        issues.append("Prioritised Recommendations: expected exactly 5 numbered items")
+
+    finance = sections.get("Financial Analysis", "")
+    if "Derived:" not in finance:
+        issues.append("Financial Analysis: at least one material calculation must be labelled 'Derived:'")
+
+    role_hits = find_role_mentions(report)
+    if role_hits:
+        issues.append("blinding terms present: " + ", ".join(role_hits))
+
+    for pattern in UNSUPPORTED_JUDGEMENT_PATTERNS:
+        match = re.search(pattern, report, re.IGNORECASE)
+        if match:
+            issues.append(f"unsupported judgement term: '{match.group(0)}'")
+
+    for pattern in INVENTED_TACTIC_PATTERNS:
+        match = re.search(pattern, report, re.IGNORECASE)
+        if match:
+            issues.append(f"invented tactic: '{match.group(0)}'")
+
+    return issues
