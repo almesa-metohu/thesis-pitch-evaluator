@@ -40,7 +40,7 @@ def enforce_final_report_quality(final: AgentResult) -> tuple[AgentResult, list[
             "final_qc_editor",
             FINAL_QC_REWRITE_SYSTEM_PROMPT,
             FINAL_QC_REWRITE_USER_PROMPT,
-            config.MAX_OUTPUT_TOKENS,
+            config.FINAL_QC_MAX_OUTPUT_TOKENS,
             {
                 "report_text": current.output,
                 "issues": "\n".join(f"- {issue}" for issue in issues),
