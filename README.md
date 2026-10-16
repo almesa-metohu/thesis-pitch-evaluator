@@ -25,7 +25,7 @@ automated sub-study. An optional LLM judge exists for exploratory comparison onl
 ## 2. Single-agent architecture
 
 ```
-pitch ──> Single Agent (one LLM call, all domains) ──> final report (8 sections)
+pitch ──> Single Agent (one analytical LLM call, all domains) ──> final report (8 sections)
 ```
 
 `agents/single_agent.py` + `prompts/single_agent_prompt.py`. The prompt is intentionally strong: it carries
@@ -77,8 +77,11 @@ Specialist agents use a shorter intermediate budget (`SPECIALIST_TARGET_WORDS`, 
 their outputs feed the moderator and are stored but never compared with the single-agent report.
 
 For every final report the system records `word_count`, `token_count`, `within_length_budget` and
-`missing_sections`, so length compliance can be reported rather than assumed. Token and cost totals for the
-multi-agent condition include every call of the discussion (typically 9 to 11).
+`missing_sections`, so length compliance can be reported rather than assumed. If either condition produces
+a final report outside 800-1000 words, the SAME neutral length editor is applied once. It receives only the
+existing draft, may remove repetition or clarify existing reasoning, and is forbidden from adding new findings.
+Any correction call is logged and included in latency, token and cost totals. Token and cost totals for the
+multi-agent condition include every call of the discussion plus any neutral correction call.
 
 `tests/test_smoke.py` asserts that both final prompts contain the identical template and length instruction.
 
@@ -177,7 +180,7 @@ Optional, exploratory only: `python -m evaluation.llm_judge` rates the blinded r
   "latency_seconds": 10.9, "sequential_latency_seconds": 10.9,
   "input_tokens": 1000, "output_tokens": 1243, "total_tokens": 2243, "estimated_cost_usd": 0.00092,
   "word_count": 967, "token_count": 1243, "final_output_tokens": 1243,
-  "within_length_budget": true, "missing_sections": [], "finish_reason": "stop", "llm_calls": 1,
+  "within_length_budget": true, "missing_sections": [], "finish_reason": "stop", "llm_calls": 1, "final_length_correction_calls": 0,
   "report": "## 1. Overall Assessment ...",
   "role_mentions": [],
   "discussion": [
