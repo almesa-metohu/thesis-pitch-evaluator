@@ -176,6 +176,7 @@ Answer the Moderator now. Rules for this response:
 - Do not repeat your Round 1 analysis; build on it. Reference specific findings or figures from other specialists' Round 1 notes where they bear on the question, naming the specialist (for example "the CTO Agent's point that ...").
 - Where the combination of findings changes a conclusion, say what changes and why. Where it does not, say so and explain what evidence would be needed.
 - Keep every statement anchored to the pitch or to a specialist finding; do not introduce new facts.
+- Do not invent implementation tactics or remedies that are absent from the pitch. In particular, do not introduce consultants, backup teams, loyalty programmes, discounts, financing schemes, new marketing channels, new product features or new technologies. If action is needed, state what must be validated, measured, clarified, tested or costed.
 - Finish each response with one line starting "Bottom line:" stating the net implication for the venture.
 """ + RESPONSE_LENGTH_REMINDER
 
