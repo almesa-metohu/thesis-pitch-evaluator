@@ -46,6 +46,10 @@ OUTPUT_TOLERANCE: int = 100
 # leaves headroom so the model is not cut mid-sentence, while preventing runaway
 # length. The SAME cap applies to the single-agent report and the moderator report.
 MAX_OUTPUT_TOKENS: int = 1700
+# If a final report falls outside the shared word budget, both conditions use
+# the same neutral length-correction step. The correction may only compress or
+# expand the existing draft; it may not add new analysis.
+MAX_FINAL_LENGTH_RETRIES: int = 1
 
 # Intermediate specialist outputs may be shorter. They are inputs to the
 # moderator and are NOT compared against the single-agent report.
@@ -133,6 +137,7 @@ def generation_settings() -> dict[str, object]:
         "specialist_max_output_tokens": SPECIALIST_MAX_OUTPUT_TOKENS,
         "target_output_words": TARGET_OUTPUT_WORDS,
         "output_tolerance": OUTPUT_TOLERANCE,
+        "max_final_length_retries": MAX_FINAL_LENGTH_RETRIES,
         "specialist_target_words": SPECIALIST_TARGET_WORDS,
         "parallel_specialists": PARALLEL_SPECIALISTS,
         "moderator_opening_max_output_tokens": MODERATOR_OPENING_MAX_OUTPUT_TOKENS,
