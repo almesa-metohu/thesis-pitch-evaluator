@@ -61,8 +61,8 @@ USER_PROMPT = """<pitch>
 </report_b>
 
 Return JSON with exactly this structure:
-{
-  "A": {
+{{
+  "A": {{
     "specificity": 1,
     "depth_strategy": 0,
     "depth_technology": 0,
@@ -70,8 +70,8 @@ Return JSON with exactly this structure:
     "depth_marketing": 0,
     "clarity": 1,
     "brief_reason": "one or two sentences"
-  },
-  "B": {
+  }},
+  "B": {{
     "specificity": 1,
     "depth_strategy": 0,
     "depth_technology": 0,
@@ -79,8 +79,8 @@ Return JSON with exactly this structure:
     "depth_marketing": 0,
     "clarity": 1,
     "brief_reason": "one or two sentences"
-  }
-}
+  }}
+}}
 Use integers only for scores.
 """
 
