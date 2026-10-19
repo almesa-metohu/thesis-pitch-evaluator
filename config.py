@@ -113,6 +113,12 @@ PRICING_USD_PER_1M: dict[str, dict[str, float]] = {
 USE_EMBEDDINGS: bool = False
 EMBEDDING_MODEL: str = "text-embedding-3-small"
 
+# Independent automated evaluator used for the main report-quality comparison.
+# It is intentionally different from the generation model.
+JUDGE_MODEL: str = os.getenv("JUDGE_MODEL", "gpt-4.1-mini")
+JUDGE_TEMPERATURE: float = 0.0
+JUDGE_MAX_OUTPUT_TOKENS: int = 1200
+
 # Set PITCH_EVAL_MOCK=1 to replace the LLM with a deterministic fake for
 # testing commands without API cost.
 MOCK_LLM: bool = os.getenv("PITCH_EVAL_MOCK", "0") == "1"
