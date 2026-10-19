@@ -1,0 +1,30 @@
+{
+  "generation_settings": {
+    "model": "gpt-4o-mini",
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "llm_seed": null,
+    "max_output_tokens": 1700,
+    "specialist_max_output_tokens": 1200,
+    "target_output_words": 900,
+    "output_tolerance": 100,
+    "max_final_length_retries": 2,
+    "final_qc_max_output_tokens": 1250,
+    "specialist_target_words": 500,
+    "parallel_specialists": true,
+    "moderator_opening_max_output_tokens": 400,
+    "moderator_followup_max_output_tokens": 700,
+    "max_followup_questions": 4,
+    "response_target_words": 300,
+    "response_max_output_tokens": 800
+  },
+  "judge_model": "gpt-4.1-mini",
+  "artifacts": {
+    "main_run_json_files": 12,
+    "main_runs_summary_csv": true,
+    "automated_judge_csv": true,
+    "automated_judge_json": true,
+    "stability_summary_csv": true,
+    "stability_results_json": true
+  }
+}

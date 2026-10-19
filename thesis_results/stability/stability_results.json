@@ -1,0 +1,269 @@
+{
+  "settings": {
+    "model": "gpt-4o-mini",
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "llm_seed": null,
+    "max_output_tokens": 1700,
+    "specialist_max_output_tokens": 1200,
+    "target_output_words": 900,
+    "output_tolerance": 100,
+    "max_final_length_retries": 2,
+    "final_qc_max_output_tokens": 1250,
+    "specialist_target_words": 500,
+    "parallel_specialists": true,
+    "moderator_opening_max_output_tokens": 400,
+    "moderator_followup_max_output_tokens": 700,
+    "max_followup_questions": 4,
+    "response_target_words": 300,
+    "response_max_output_tokens": 800
+  },
+  "results": [
+    {
+      "pitch_id": "P01",
+      "system_type": "single",
+      "n_runs": 5,
+      "run_ids": [
+        "02f3c73412b2",
+        "829fb916c0a6",
+        "135594d9fd9e",
+        "3a5442c03392",
+        "9cfc41ddc6b4"
+      ],
+      "word_count_mean": 965.8,
+      "word_count_sd": 16.9,
+      "agreement": {
+        "lexical_jaccard": {
+          "mean": 0.5192,
+          "sd": 0.0179,
+          "n_pairs": 10
+        },
+        "sequence_ratio": {
+          "mean": 0.1846,
+          "sd": 0.0329,
+          "n_pairs": 10
+        },
+        "section_jaccard_mean": {
+          "mean": 0.376,
+          "sd": 0.0233,
+          "n_pairs": 10
+        },
+        "risk_overlap": {
+          "mean": 0.2637,
+          "sd": 0.0515,
+          "n_pairs": 10
+        },
+        "recommendation_overlap": {
+          "mean": 0.2324,
+          "sd": 0.0947,
+          "n_pairs": 10
+        }
+      }
+    },
+    {
+      "pitch_id": "P01",
+      "system_type": "multi",
+      "n_runs": 5,
+      "run_ids": [
+        "4724917b413a",
+        "1124b940a435",
+        "47b7c1306fba",
+        "31199d426031",
+        "4d91efa8cffe"
+      ],
+      "word_count_mean": 935.8,
+      "word_count_sd": 21.7,
+      "agreement": {
+        "lexical_jaccard": {
+          "mean": 0.4354,
+          "sd": 0.0166,
+          "n_pairs": 10
+        },
+        "sequence_ratio": {
+          "mean": 0.1311,
+          "sd": 0.0416,
+          "n_pairs": 10
+        },
+        "section_jaccard_mean": {
+          "mean": 0.297,
+          "sd": 0.0189,
+          "n_pairs": 10
+        },
+        "risk_overlap": {
+          "mean": 0.1978,
+          "sd": 0.049,
+          "n_pairs": 10
+        },
+        "recommendation_overlap": {
+          "mean": 0.1543,
+          "sd": 0.0621,
+          "n_pairs": 10
+        }
+      }
+    },
+    {
+      "pitch_id": "P04",
+      "system_type": "single",
+      "n_runs": 5,
+      "run_ids": [
+        "2c2554c8c282",
+        "1450e73a3f67",
+        "a96f6bb5e8bc",
+        "978e0bb82bb3",
+        "3f9f8654c691"
+      ],
+      "word_count_mean": 972.6,
+      "word_count_sd": 23.3,
+      "agreement": {
+        "lexical_jaccard": {
+          "mean": 0.5158,
+          "sd": 0.0423,
+          "n_pairs": 10
+        },
+        "sequence_ratio": {
+          "mean": 0.2254,
+          "sd": 0.0737,
+          "n_pairs": 10
+        },
+        "section_jaccard_mean": {
+          "mean": 0.4102,
+          "sd": 0.0381,
+          "n_pairs": 10
+        },
+        "risk_overlap": {
+          "mean": 0.2631,
+          "sd": 0.0452,
+          "n_pairs": 10
+        },
+        "recommendation_overlap": {
+          "mean": 0.3447,
+          "sd": 0.0386,
+          "n_pairs": 10
+        }
+      }
+    },
+    {
+      "pitch_id": "P04",
+      "system_type": "multi",
+      "n_runs": 5,
+      "run_ids": [
+        "673088a8a127",
+        "b61950c1d4f2",
+        "74fcb8631a74",
+        "11745fa32679",
+        "695dcae63990"
+      ],
+      "word_count_mean": 923.6,
+      "word_count_sd": 37.3,
+      "agreement": {
+        "lexical_jaccard": {
+          "mean": 0.4274,
+          "sd": 0.0157,
+          "n_pairs": 10
+        },
+        "sequence_ratio": {
+          "mean": 0.1265,
+          "sd": 0.0292,
+          "n_pairs": 10
+        },
+        "section_jaccard_mean": {
+          "mean": 0.2658,
+          "sd": 0.0252,
+          "n_pairs": 10
+        },
+        "risk_overlap": {
+          "mean": 0.2027,
+          "sd": 0.07,
+          "n_pairs": 10
+        },
+        "recommendation_overlap": {
+          "mean": 0.1075,
+          "sd": 0.1187,
+          "n_pairs": 10
+        }
+      }
+    },
+    {
+      "pitch_id": "P06",
+      "system_type": "single",
+      "n_runs": 5,
+      "run_ids": [
+        "62cd49306942",
+        "ba190df8c15b",
+        "603a99ece467",
+        "582f178bca40",
+        "8c6cc221f12b"
+      ],
+      "word_count_mean": 968,
+      "word_count_sd": 4.2,
+      "agreement": {
+        "lexical_jaccard": {
+          "mean": 0.5097,
+          "sd": 0.0235,
+          "n_pairs": 10
+        },
+        "sequence_ratio": {
+          "mean": 0.2793,
+          "sd": 0.052,
+          "n_pairs": 10
+        },
+        "section_jaccard_mean": {
+          "mean": 0.3848,
+          "sd": 0.0219,
+          "n_pairs": 10
+        },
+        "risk_overlap": {
+          "mean": 0.379,
+          "sd": 0.0968,
+          "n_pairs": 10
+        },
+        "recommendation_overlap": {
+          "mean": 0.2138,
+          "sd": 0.0819,
+          "n_pairs": 10
+        }
+      }
+    },
+    {
+      "pitch_id": "P06",
+      "system_type": "multi",
+      "n_runs": 5,
+      "run_ids": [
+        "309d8642a409",
+        "330a587d4730",
+        "b04b5c81a155",
+        "788f6e532852",
+        "7e6d6dca6cf9"
+      ],
+      "word_count_mean": 890.8,
+      "word_count_sd": 24.5,
+      "agreement": {
+        "lexical_jaccard": {
+          "mean": 0.4409,
+          "sd": 0.021,
+          "n_pairs": 10
+        },
+        "sequence_ratio": {
+          "mean": 0.1337,
+          "sd": 0.0374,
+          "n_pairs": 10
+        },
+        "section_jaccard_mean": {
+          "mean": 0.2973,
+          "sd": 0.013,
+          "n_pairs": 10
+        },
+        "risk_overlap": {
+          "mean": 0.2697,
+          "sd": 0.0303,
+          "n_pairs": 10
+        },
+        "recommendation_overlap": {
+          "mean": 0.2315,
+          "sd": 0.0586,
+          "n_pairs": 10
+        }
+      }
+    }
+  ]
+}
