@@ -1,0 +1,13 @@
+statistic,system,mean,sd,n,unit_or_scale,source
+risk_overlap,single,0.3019,0.0862,30,0-1,stability_results.json pooled across 3 pitches x 10 run-pairs
+risk_overlap,multi,0.2234,0.0605,30,0-1,stability_results.json pooled across 3 pitches x 10 run-pairs
+recommendation_overlap,single,0.2636,0.0937,30,0-1,stability_results.json pooled across 3 pitches x 10 run-pairs
+recommendation_overlap,multi,0.1644,0.0966,30,0-1,stability_results.json pooled across 3 pitches x 10 run-pairs
+lexical_jaccard,single,0.5149,0.0290,30,0-1,stability_results.json pooled across 3 pitches x 10 run-pairs
+lexical_jaccard,multi,0.4346,0.0182,30,0-1,stability_results.json pooled across 3 pitches x 10 run-pairs
+section_jaccard_mean,single,0.3903,0.0314,30,0-1,stability_results.json pooled across 3 pitches x 10 run-pairs
+section_jaccard_mean,multi,0.2867,0.0242,30,0-1,stability_results.json pooled across 3 pitches x 10 run-pairs
+sequence_ratio,single,0.2298,0.0665,30,0-1,stability_results.json pooled across 3 pitches x 10 run-pairs
+sequence_ratio,multi,0.1304,0.0353,30,0-1,stability_results.json pooled across 3 pitches x 10 run-pairs
+sequential_latency_seconds,single,11.264,1.535,6,seconds,main_runs_summary.csv
+sequential_latency_seconds,multi,98.241,19.427,6,seconds,main_runs_summary.csv
